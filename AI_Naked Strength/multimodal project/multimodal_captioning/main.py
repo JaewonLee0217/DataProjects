@@ -1,7 +1,7 @@
 from utils.data_loader import get_loader
 
 def main():
-    csv_file = 'TBD'
+    csv_file = 'data/flickr30k'
     img_dir = 'TBD'
 
 
