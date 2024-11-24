@@ -1,13 +1,12 @@
 from utils.data_loader import get_loader
 
 def main():
-    csv_file = 'data/flickr30k'
-    img_dir = 'TBD'
-
+    img_dir = 'AI_Naked Strength/multimodal project/data/flickr30k/images'
+    caption_file = 'AI_Naked Strength/multimodal project/data/flickr30k/captions.txt'
 
     data_loader = get_loader(
-        csv_file = csv_file,
         img_dir = img_dir,
+        captino_file=caption_file,
         batch_size = 32,
         shuffle=True,
         num_workers=4
