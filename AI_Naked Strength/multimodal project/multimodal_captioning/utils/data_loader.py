@@ -1,8 +1,8 @@
-import os
-from PIL import Image
-import torch
+import csv
 from torch.utils.data import Dataset, DataLoader
 from torchvision import transforms
+from PIL import Image
+import os
 
 
 class Flickr30kDataset(Dataset):
@@ -12,13 +12,20 @@ class Flickr30kDataset(Dataset):
         self.images = []
         self.captions = []
 
+        print(f"Loading data from {caption_file}")
         with open(caption_file, 'r') as f:
-            for line in f:
-                parts = line.strip().split('\t')
-                if len(parts) == 2:
-                    img_name, caption = parts
+            csv_reader = csv.reader(f)
+            next(csv_reader)  # 헤더 건너뛰기
+            for row in csv_reader:
+                if len(row) == 2:
+                    img_name, caption = row
                     self.images.append(img_name)
                     self.captions.append(caption)
+
+        print(f"Loaded {len(self.images)} images and captions")
+
+        if len(self.images) == 0:
+            raise ValueError("No data loaded. Check the caption file path and content.")
 
     def __len__(self):
         return len(self.images)
@@ -42,6 +49,11 @@ def get_loader(img_dir, caption_file, batch_size, shuffle, num_workers):
     ])
 
     dataset = Flickr30kDataset(img_dir, caption_file, transform=transform)
+
+    print(f"Dataset size: {len(dataset)}")
+
+    if len(dataset) == 0:
+        raise ValueError("Dataset is empty. Check the data loading process.")
 
     data_loader = DataLoader(
         dataset=dataset,
