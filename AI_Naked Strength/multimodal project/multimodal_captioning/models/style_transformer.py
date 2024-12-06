@@ -37,5 +37,19 @@ class PositionalEncoding(nn.Module):
 
 
 class StyleTransformer(nn.Module):
-    def __init__(self, vocab_size, d_model, nhead, num_encoder_layers, num_decoder_layers, dim_feedforward, dropout=0.1):
+    def __init__(self, vocab_size, d_model, nhead, num_encoder_layers, num_decoder_layers, dim_feedforward,
+                 dropout=0.1):
         super(StyleTransformer, self).__init__()
+        self.embedding = nn.Embedding(vocab_size, d_model)
+        self.pos_encoder = PositionalEncoding(d_model, dropout)
+
+        self.transformer = nn.Transformer(
+            d_model=d_model,
+            nhead=nhead,
+            num_encoder_layers=num_encoder_layers,
+            num_decoder_layers=num_decoder_layers,
+            dim_feedforward=dim_feedforward,
+            dropout=dropout
+        )
+
+        self.fc_out = nn.Linear(d_model, vocab_size)
